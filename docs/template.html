@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Title - Thư viện Tài liệu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .prose {
+            max-width: 65ch;
+            line-height: 1.6;
+        }
+        .prose h1 { font-size: 2rem; font-weight: bold; margin: 1.5rem 0 1rem; color: #dc2626; }
+        .prose h2 { font-size: 1.5rem; font-weight: bold; margin: 1.2rem 0 0.8rem; color: #374151; }
+        .prose h3 { font-size: 1.25rem; font-weight: semibold; margin: 1rem 0 0.5rem; }
+        .prose p { margin: 1rem 0; }
+        .prose ul, .prose ol { margin: 1rem 0 1rem 2rem; }
+        .prose li { margin: 0.25rem 0; }
+        .prose code { background: #f3f4f6; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; }
+        .prose pre { background: #1f2937; color: #e5e7eb; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+        .prose pre code { background: none; padding: 0; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-red-700 to-red-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <a href="../index.html" class="flex items-center gap-3 hover:opacity-90 transition">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                    <div>
+                        <h1 class="text-xl font-bold">Thư viện Tài liệu</h1>
+                        <p class="text-red-100 text-xs">Quay lại trang chính</p>
+                    </div>
+                </a>
+                <i class="fas fa-graduation-cap text-2xl"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6 md:p-8">
+            <!-- Document Header -->
+            <div class="border-b border-gray-200 pb-6 mb-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-700">
+                        <i class="fas fa-tag mr-2"></i>Category Name
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700">
+                        <i class="fas fa-folder mr-2"></i>Subcategory Name
+                    </span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Document Title</h1>
+                <p class="text-gray-600 text-lg">Document description goes here. This is a brief overview of what readers will learn from this document.</p>
+            </div>
+
+            <!-- Document Content -->
+            <div class="prose max-w-none">
+                <h1>Giới thiệu</h1>
+                <p>Đây là nội dung chi tiết của tài liệu. Bạn có thể viết nội dung học tập, bài giảng, hướng dẫn, hoặc bất kỳ tài liệu nào bạn muốn lưu trữ.</p>
+                
+                <h2>Mục tiêu học tập</h2>
+                <ul>
+                    <li>Hiểu được các khái niệm cơ bản</li>
+                    <li>Nắm vững kiến thức nền tảng</li>
+                    <li>Áp dụng vào thực tế</li>
+                </ul>
+                
+                <h2>Nội dung chính</h2>
+                <p>Phần này trình bày chi tiết nội dung của tài liệu. Bạn có thể thêm code examples, hình ảnh minh họa, hoặc bất kỳ nội dung nào phù hợp.</p>
+                
+                <h3>Ví dụ code</h3>
+                <pre><code>// Example code here
+function hello() {
+    console.log("Hello, World!");
+}</code></pre>
+                
+                <h2>Bài tập thực hành</h2>
+                <p>Các bài tập giúp củng cố kiến thức đã học.</p>
+                <ol>
+                    <li>Bài tập 1: Mô tả bài tập</li>
+                    <li>Bài tập 2: Mô tả bài tập</li>
+                    <li>Bài tập 3: Mô tả bài tập</li>
+                </ol>
+                
+                <h2>Tài liệu tham khảo</h2>
+                <ul>
+                    <li>Link tham khảo 1</li>
+                    <li>Link tham khảo 2</li>
+                </ul>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between items-center mt-8 pt-6 border-t border-gray-200">
+                <a href="../index.html" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Quay lại</span>
+                </a>
+                <!-- <div class="flex gap-2">
+                    <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        <i class="fas fa-download mr-2"></i>Tải xuống
+                    </button>
+                    <button class="px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition">
+                        <i class="fas fa-share-alt mr-2"></i>Chia sẻ
+                    </button>
+                </div> -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 mt-12 py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 Thư viện Tài liệu Khoa học Máy tính & Toán học</p>
+        </div>
+    </footer>
+</body>
+</html>

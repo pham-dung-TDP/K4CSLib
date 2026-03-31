@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mô phỏng Không gian sinh (Linear Span)</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5', 
+                        secondary: '#10B981', 
+                        bglight: '#F8FAFC', 
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Canvas Container */
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+            position: relative;
+            outline: none;
+        }
+
+        /* Custom Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .math-block {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #4F46E5;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-item {
+            transition: all 0.2s;
+        }
+        .nav-item.active {
+            background-color: #EEF2FF;
+            color: #4F46E5;
+            border-right: 3px solid #4F46E5;
+            font-weight: 600;
+        }
+        .nav-item:hover:not(.active) {
+            background-color: #F1F5F9;
+        }
+    </style>
+</head>
+<body class="bg-bglight text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 h-16 flex-shrink-0 flex justify-between items-center px-6 z-20">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 bg-primary text-white rounded-lg flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-cube"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-slate-900 leading-tight">Không gian sinh (Span)</h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-wide">Đại số tuyến tính trực quan</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="resetCamera()" class="text-slate-500 hover:text-primary transition-colors text-sm" title="Đặt lại camera">
+                <i class="fa-solid fa-compress-arrows-alt"></i> <span class="hidden sm:inline">Reset View</span>
+            </button>
+            <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+            <a href="#" class="text-slate-400 hover:text-slate-600"><i class="fa-brands fa-github"></i></a>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden relative">
+        
+        <!-- Sidebar Navigation (Left) -->
+        <aside class="w-72 bg-white border-r border-slate-200 flex-shrink-0 flex flex-col z-10 hidden md:flex">
+            <div class="p-4 border-b border-slate-100 bg-slate-50">
+                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Chọn trường hợp</h3>
+            </div>
+            <nav class="flex-1 overflow-y-auto custom-scroll py-2 space-y-1">
+                <button onclick="switchCase(0)" id="nav-0" class="nav-item w-full text-left px-5 py-3 text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-vector-square w-5 text-center text-blue-500"></i>
+                    <span>2 Vectơ độc lập (R²)</span>
+                </button>
+                <button onclick="switchCase(1)" id="nav-1" class="nav-item w-full text-left px-5 py-3 text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-arrows-left-right w-5 text-center text-red-500"></i>
+                    <span>2 Vectơ phụ thuộc (R²)</span>
+                </button>
+                <button onclick="switchCase(2)" id="nav-2" class="nav-item w-full text-left px-5 py-3 text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-cubes w-5 text-center text-purple-600"></i>
+                    <span>3 Vectơ độc lập (R³)</span>
+                </button>
+                <button onclick="switchCase(3)" id="nav-3" class="nav-item w-full text-left px-5 py-3 text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-layer-group w-5 text-center text-emerald-500"></i>
+                    <span>3 Vectơ đồng phẳng (R³)</span>
+                </button>
+                <button onclick="switchCase(4)" id="nav-4" class="nav-item w-full text-left px-5 py-3 text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-arrow-up-long w-5 text-center text-orange-500"></i>
+                    <span>3 Vectơ đồng phương (R³)</span>
+                </button>
+                <button onclick="switchCase(5)" id="nav-5" class="nav-item w-full text-left px-5 py-3 text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-shapes w-5 text-center text-indigo-500"></i>
+                    <span>4 Vectơ trong R³ (Dư)</span>
+                </button>
+                <button onclick="switchCase(6)" id="nav-6" class="nav-item w-full text-left px-5 py-3 text-sm flex items-center gap-3">
+                    <i class="fa-solid fa-circle w-5 text-center text-slate-400"></i>
+                    <span>Vectơ không (Tầm thường)</span>
+                </button>
+            </nav>
+            <div class="p-4 border-t border-slate-100 bg-slate-50 text-xs text-slate-500">
+                <i class="fa-solid fa-mouse mr-1"></i> Kéo để xoay, lăn để zoom
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col lg:flex-row relative overflow-hidden">
+            
+            <!-- 3D Visualization (Center) -->
+            <div class="flex-1 relative bg-slate-100 flex items-center justify-center p-4 lg:p-6">
+                <div id="canvas-container" class="shadow-inner rounded-xl border border-slate-200"></div>
+                
+                <!-- Mobile Menu Toggle -->
+                <button class="md:hidden absolute top-4 left-4 z-30 bg-white p-2 rounded shadow text-slate-600" onclick="toggleSidebar()">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Info Panel (Right) -->
+            <div class="w-full lg:w-[400px] bg-white border-l border-slate-200 flex flex-col z-10 shadow-xl lg:shadow-none">
+                <div class="p-6 border-b border-slate-100 flex-shrink-0">
+                    <h2 id="case-title" class="text-xl font-bold text-slate-900 mb-2">Loading...</h2>
+                    <div id="case-badge" class="inline-block px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-full border border-indigo-100">
+                        Status
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto custom-scroll p-6 space-y-6">
+                    <!-- Math Formula -->
+                    <div class="math-block">
+                        <p class="text-xs text-slate-500 mb-2 font-semibold uppercase">Định nghĩa</p>
+                        $$ \text{span}(S) = \{ c_1v_1 + \dots + c_kv_k \} $$
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-primary"></i> Phân tích
+                        </h3>
+                        <p id="case-desc" class="text-sm text-slate-600 leading-relaxed text-justify">
+                            ...
+                        </p>
+                    </div>
+
+                    <!-- Features List -->
+                    <div class="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase mb-3">Đặc điểm hình học</h4>
+                        <ul id="case-features" class="space-y-2 text-sm text-slate-700">
+                            <!-- Items injected by JS -->
+                        </ul>
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="pt-4 border-t border-slate-100">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase mb-3">Chú giải</h4>
+                        <div id="case-legend" class="space-y-2">
+                            <!-- Legend items injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="mobile-sidebar" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden" onclick="toggleSidebar()"></div>
+    <div id="mobile-nav" class="fixed inset-y-0 left-0 w-64 bg-white z-50 transform -translate-x-full transition-transform duration-300 md:hidden flex flex-col">
+        <div class="p-4 border-b flex justify-between items-center">
+            <span class="font-bold text-slate-700">Menu</span>
+            <button onclick="toggleSidebar()"><i class="fa-solid fa-times"></i></button>
+        </div>
+        <nav class="flex-1 overflow-y-auto p-2 space-y-1" id="mobile-nav-content">
+            <!-- Cloned from desktop nav via JS or duplicated HTML -->
+        </nav>
+    </div>
+
+    <script>
+        // --- Data Configuration ---
+        const cases = [
+            {
+                id: 0,
+                title: "2 Vectơ độc lập trong R²",
+                badge: "Span = R² (Mặt phẳng)",
+                badgeColor: "bg-blue-100 text-blue-700 border-blue-200",
+                desc: "Hai vectơ \( v_1, v_2 \) không cùng phương. Chúng tạo thành một cơ sở cho mặt phẳng 2 chiều. Mọi điểm trên mặt phẳng này đều có thể biểu diễn được qua tổ hợp tuyến tính \( c_1v_1 + c_2v_2 \).",
+                features: [
+                    "Góc giữa 2 vectơ khác 0° và 180°.",
+                    "Hệ vectơ độc lập tuyến tính.",
+                    "Không gian sinh lấp đầy toàn bộ mặt phẳng chứa chúng."
+                ],
+                vectors: [
+                    { dir: [2, 0, 0], color: 0xef4444, label: "v₁" },
+                    { dir: [0, 2, 0], color: 0x3b82f6, label: "v₂" }
+                ],
+                spanType: "plane_2d",
+                is3D: false
+            },
+            {
+                id: 1,
+                title: "2 Vectơ phụ thuộc trong R²",
+                badge: "Span = Đường thẳng",
+                badgeColor: "bg-red-100 text-red-700 border-red-200",
+                desc: "Hai vectơ \( v_1, v_2 \) cùng phương (song song). Khi đó \( v_2 = k \cdot v_1 \). Không gian sinh bị suy biến chỉ còn là một đường thẳng đi qua gốc tọa độ.",
+                features: [
+                    "Hai vectơ nằm trên cùng một đường thẳng.",
+                    "Hệ vectơ phụ thuộc tuyến tính.",
+                    "Không gian sinh có số chiều bằng 1."
+                ],
+                vectors: [
+                    { dir: [2, 0, 0], color: 0xef4444, label: "v₁" },
+                    { dir: [-1.5, 0, 0], color: 0x3b82f6, label: "v₂" }
+                ],
+                spanType: "line_2d",
+                is3D: false
+            },
+            {
+                id: 2,
+                title: "3 Vectơ độc lập trong R³",
+                badge: "Span = R³ (Không gian)",
+                badgeColor: "bg-purple-100 text-purple-700 border-purple-200",
+                desc: "Ba vectơ \( v_1, v_2, v_3 \) không đồng phẳng. Chúng tạo thành một cơ sở cho không gian 3 chiều. Tổ hợp tuyến tính của chúng lấp đầy toàn bộ không gian vô hạn.",
+                features: [
+                    "Ba vectơ không nằm trên cùng một mặt phẳng.",
+                    "Hệ vectơ độc lập tuyến tính.",
+                    "Không gian sinh là toàn bộ R³."
+                ],
+                vectors: [
+                    { dir: [2, 0, 0], color: 0xef4444, label: "v₁" },
+                    { dir: [0, 2, 0], color: 0x3b82f6, label: "v₂" },
+                    { dir: [0, 0, 2], color: 0x10b981, label: "v₃" }
+                ],
+                spanType: "box_3d",
+                is3D: true
+            },
+            {
+                id: 3,
+                title: "3 Vectơ đồng phẳng trong R³",
+                badge: "Span = Mặt phẳng (trong R³)",
+                badgeColor: "bg-emerald-100 text-emerald-700 border-emerald-200",
+                desc: "Ba vectơ nằm trên cùng một mặt phẳng (ví dụ mặt phẳng XY) nhưng không cùng phương. Vectơ thứ 3 là tổ hợp của 2 vectơ kia. Không gian sinh là một mặt phẳng 2 chiều nhúng trong không gian 3D.",
+                features: [
+                    "Ba vectơ cùng nằm trên một mặt phẳng.",
+                    "Hệ vectơ phụ thuộc tuyến tính.",
+                    "Không gian sinh là một mặt phẳng (2 chiều)."
+                ],
+                vectors: [
+                    { dir: [2, 0, 0], color: 0xef4444, label: "v₁" },
+                    { dir: [0, 2, 0], color: 0x3b82f6, label: "v₂" },
+                    { dir: [1.5, 1.5, 0], color: 0x10b981, label: "v₃" }
+                ],
+                spanType: "plane_3d",
+                is3D: true
+            },
+            {
+                id: 4,
+                title: "3 Vectơ đồng phương trong R³",
+                badge: "Span = Đường thẳng (trong R³)",
+                badgeColor: "bg-orange-100 text-orange-700 border-orange-200",
+                desc: "Tất cả các vectơ đều nằm trên cùng một đường thẳng đi qua gốc tọa độ. Sự phụ thuộc tuyến tính ở mức độ cao nhất (ngoài vectơ 0).",
+                features: [
+                    "Tất cả vectơ cùng phương.",
+                    "Hệ vectơ phụ thuộc tuyến tính mạnh.",
+                    "Không gian sinh chỉ là 1 đường thẳng."
+                ],
+                vectors: [
+                    { dir: [1, 1, 1], color: 0xef4444, label: "v₁" },
+                    { dir: [2, 2, 2], color: 0x3b82f6, label: "v₂" },
+                    { dir: [-1.5, -1.5, -1.5], color: 0x10b981, label: "v₃" }
+                ],
+                spanType: "line_3d",
+                is3D: true
+            },
+            {
+                id: 5,
+                title: "4 Vectơ trong R³ (Dư thừa)",
+                badge: "Span = R³ (Nhưng dư vectơ)",
+                badgeColor: "bg-indigo-100 text-indigo-700 border-indigo-200",
+                desc: "Khi có 4 vectơ trong không gian 3 chiều, chắc chắn chúng phụ thuộc tuyến tính. Tuy nhiên, nếu 3 trong số chúng độc lập, không gian sinh vẫn là toàn bộ R³. Vectơ thứ 4 là 'thừa'.",
+                features: [
+                    "Số vectơ (4) > Số chiều không gian (3).",
+                    "Chắc chắn phụ thuộc tuyến tính.",
+                    "Không gian sinh vẫn là R³ (nếu có 3 vectơ độc lập)."
+                ],
+                vectors: [
+                    { dir: [2, 0, 0], color: 0xef4444, label: "v₁" },
+                    { dir: [0, 2, 0], color: 0x3b82f6, label: "v₂" },
+                    { dir: [0, 0, 2], color: 0x10b981, label: "v₃" },
+                    { dir: [1, 1, 1], color: 0xf59e0b, label: "v₄ (Dư)" }
+                ],
+                spanType: "box_3d",
+                is3D: true
+            },
+            {
+                id: 6,
+                title: "Trường hợp tầm thường",
+                badge: "Span = {0}",
+                badgeColor: "bg-slate-200 text-slate-600 border-slate-300",
+                desc: "Tập hợp chỉ chứa vectơ không hoặc không có vectơ nào. Tổ hợp tuyến tính duy nhất tạo ra là vectơ không. Không gian sinh là một điểm duy nhất.",
+                features: [
+                    "Chỉ có vectơ không.",
+                    "Không có hướng, độ dài bằng 0.",
+                    "Số chiều của không gian sinh = 0."
+                ],
+                vectors: [],
+                spanType: "point",
+                is3D: true
+            }
+        ];
+
+        // --- Three.js Logic ---
+        let scene, camera, renderer, controls;
+        let sceneObjects = []; 
+
+        function initThree() {
+            const container = document.getElementById('canvas-container');
+            
+            scene = new THREE.Scene();
+            // Match bg-slate-100 roughly
+            scene.background = new THREE.Color(0xf1f5f9); 
+            scene.fog = new THREE.Fog(0xf1f5f9, 10, 50);
+
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+            camera.position.set(6, 6, 6);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            container.appendChild(renderer.domElement);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(5, 10, 7);
+            dirLight.castShadow = true;
+            scene.add(dirLight);
+
+            // Grid & Axes
+            const gridHelper = new THREE.GridHelper(10, 10, 0xcbd5e1, 0xe2e8f0);
+            scene.add(gridHelper);
+            const axesHelper = new THREE.AxesHelper(3);
+            scene.add(axesHelper);
+
+            window.addEventListener('resize', onWindowResize, false);
+            animate();
+            switchCase(0);
+        }
+
+        function onWindowResize() {
+            const container = document.getElementById('canvas-container');
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        function clearScene() {
+            sceneObjects.forEach(obj => scene.remove(obj));
+            sceneObjects = [];
+        }
+
+        function createArrow(dir, color, label) {
+            const origin = new THREE.Vector3(0, 0, 0);
+            const direction = new THREE.Vector3(...dir).normalize();
+            const length = Math.max(2, new THREE.Vector3(...dir).length()); 
+            const hex = color;
+            
+            const arrowHelper = new THREE.ArrowHelper(direction, origin, length, hex, 0.3, 0.2);
+            scene.add(arrowHelper);
+            sceneObjects.push(arrowHelper);
+        }
+
+        function createSpanVisual(type, vectors) {
+            let mesh;
+
+            if (type === 'plane_2d' || type === 'plane_3d') {
+                const geometry = new THREE.PlaneGeometry(8, 8, 10, 10);
+                const material = new THREE.MeshBasicMaterial({ 
+                    color: 0x8b5cf6, side: THREE.DoubleSide, transparent: true, opacity: 0.15 
+                });
+                mesh = new THREE.Mesh(geometry, material);
+                
+                if (type === 'plane_2d') mesh.rotation.x = -Math.PI / 2;
+                // plane_3d assumes XY plane based on data config
+                
+                const edges = new THREE.EdgesGeometry(geometry);
+                const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x7c3aed, opacity: 0.4 }));
+                if (type === 'plane_2d') line.rotation.x = -Math.PI / 2;
+                
+                scene.add(mesh); scene.add(line);
+                sceneObjects.push(mesh, line);
+
+            } else if (type === 'line_2d' || type === 'line_3d') {
+                if (vectors.length > 0) {
+                    const dir = new THREE.Vector3(...vectors[0].dir).normalize();
+                    const geometry = new THREE.CylinderGeometry(0.05, 0.05, 10, 8);
+                    const material = new THREE.MeshBasicMaterial({ color: 0x94a3b8, transparent: true, opacity: 0.3 });
+                    const cylinder = new THREE.Mesh(geometry, material);
+                    
+                    const axis = new THREE.Vector3(0, 1, 0);
+                    const quaternion = new THREE.Quaternion();
+                    quaternion.setFromUnitVectors(axis, dir);
+                    cylinder.quaternion.copy(quaternion);
+                    
+                    scene.add(cylinder);
+                    sceneObjects.push(cylinder);
+                }
+            } else if (type === 'box_3d') {
+                const geometry = new THREE.BoxGeometry(6, 6, 6);
+                const edges = new THREE.EdgesGeometry(geometry);
+                const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x4F46E5, opacity: 0.1 }));
+                scene.add(line);
+                sceneObjects.push(line);
+
+                // Particles to show volume
+                const particlesGeo = new THREE.BufferGeometry();
+                const count = 300;
+                const posArray = new Float32Array(count * 3);
+                for(let i=0; i<count*3; i++) posArray[i] = (Math.random() - 0.5) * 7;
+                particlesGeo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+                const particlesMat = new THREE.PointsMaterial({ size: 0.04, color: 0x4F46E5, transparent: true, opacity: 0.4 });
+                const particles = new THREE.Points(particlesGeo, particlesMat);
+                scene.add(particles);
+                sceneObjects.push(particles);
+
+            } else if (type === 'point') {
+                const geometry = new THREE.SphereGeometry(0.15, 16, 16);
+                const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+                const sphere = new THREE.Mesh(geometry, material);
+                scene.add(sphere);
+                sceneObjects.push(sphere);
+            }
+        }
+
+        function switchCase(index) {
+            const data = cases[index];
+            
+            // UI Updates
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const navItem = document.getElementById(`nav-${index}`);
+            if(navItem) navItem.classList.add('active');
+            
+            document.getElementById('case-title').innerText = data.title;
+            const badge = document.getElementById('case-badge');
+            badge.className = `inline-block px-3 py-1 text-xs font-bold rounded-full border ${data.badgeColor}`;
+            badge.innerHTML = data.badge;
+            
+            document.getElementById('case-desc').innerHTML = data.desc;
+            
+            const featuresList = document.getElementById('case-features');
+            featuresList.innerHTML = '';
+            data.features.forEach(f => {
+                const li = document.createElement('li');
+                li.className = "flex items-start gap-2";
+                li.innerHTML = `<i class="fa-solid fa-check text-green-500 mt-1 text-xs"></i> <span>${f}</span>`;
+                featuresList.appendChild(li);
+            });
+
+            const legendDiv = document.getElementById('case-legend');
+            legendDiv.innerHTML = '';
+            data.vectors.forEach((v, i) => {
+                const colorHex = '#' + v.color.toString(16).padStart(6, '0');
+                const item = document.createElement('div');
+                item.className = "flex items-center gap-2 text-sm";
+                item.innerHTML = `<span class="w-3 h-3 rounded-full" style="background-color: ${colorHex}"></span><span class="text-slate-600 font-mono">${v.label}</span>`;
+                legendDiv.appendChild(item);
+            });
+            // Add span legend
+            const spanItem = document.createElement('div');
+            spanItem.className = "flex items-center gap-2 text-sm mt-2 pt-2 border-t border-slate-100";
+            spanItem.innerHTML = `<span class="w-3 h-3 rounded bg-purple-400 opacity-40"></span><span class="text-slate-500 italic">Vùng không gian sinh</span>`;
+            legendDiv.appendChild(spanItem);
+
+            if (window.MathJax) MathJax.typesetPromise();
+
+            // 3D Updates
+            clearScene();
+            
+            if (!data.is3D) {
+                camera.position.set(0, 0, 8);
+                controls.enableRotate = false;
+            } else {
+                camera.position.set(6, 6, 6);
+                controls.enableRotate = true;
+            }
+
+            data.vectors.forEach(v => createArrow(v.dir, v.color, v.label));
+            createSpanVisual(data.spanType, data.vectors);
+        }
+
+        function resetCamera() {
+            controls.reset();
+            const currentCase = cases.find(c => document.getElementById(`nav-${c.id}`).classList.contains('active'));
+            if(currentCase && !currentCase.is3D) {
+                camera.position.set(0, 0, 8);
+            } else {
+                camera.position.set(6, 6, 6);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            
+            // Subtle rotation for particles/box
+            sceneObjects.forEach(obj => {
+                if(obj.isPoints) {
+                    obj.rotation.y += 0.002;
+                    obj.rotation.x += 0.001;
+                }
+            });
+
+            renderer.render(scene, camera);
+        }
+
+        // Mobile Menu Logic
+        function toggleSidebar() {
+            const sidebar = document.getElementById('mobile-nav');
+            const overlay = document.getElementById('mobile-sidebar');
+            const isHidden = sidebar.classList.contains('-translate-x-full');
+            
+            if (isHidden) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                // Clone nav content if empty
+                if(document.getElementById('mobile-nav-content').innerHTML === '') {
+                    document.getElementById('mobile-nav-content').innerHTML = document.querySelector('aside nav').innerHTML;
+                    // Re-attach onclick events roughly by cloning nodes or just relying on global function switchCase
+                }
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        window.onload = initThree;
+    </script>
+</body>
+</html>
