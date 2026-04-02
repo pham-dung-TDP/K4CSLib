@@ -3,247 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Bài kiểm tra trắc nghiệm - K4CSLib</title>
+    <title>Bài kiểm tra - Lý thuyết CSDL - K4CSLib</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome 6 CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- MathJax for LaTeX -->
+    <!-- MathJax for LaTeX - Cấu hình để xử lý dynamic content -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            options: {
+                enableMenu: false,
+                ignoreHtmlClass: 'no-mathjax',
+                processHtmlClass: 'latex-content'
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady();
+                }
+            }
+        };
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
     <style>
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { -webkit-tap-highlight-color: transparent; }
+        body { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); min-height: 100vh; }
+        .quiz-card { animation: slideUp 0.5s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .option-item { transition: all 0.2s ease; cursor: pointer; border: 2px solid #e5e7eb; background: white; }
+        .option-item:hover:not(.disabled) { transform: translateX(4px); border-color: #dc2626; background-color: #fef2f2; }
+        .option-item.selected-correct { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #10b981; color: white; }
+        .option-item.selected-correct .option-marker { background: white; color: #10b981; }
+        .option-item.selected-wrong { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); border-color: #ef4444; color: white; }
+        .option-item.selected-wrong .option-marker { background: white; color: #ef4444; }
+        .option-item.correct-answer { background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-color: #10b981; color: white; opacity: 0.8; }
+        .option-item.correct-answer .option-marker { background: white; color: #10b981; }
+        .option-item.selected { border-color: #dc2626; background-color: #fef2f2; }
+        .option-item.selected .option-marker { background-color: #dc2626; color: white; }
+        .option-marker { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background-color: #f3f4f6; transition: all 0.2s ease; font-weight: bold; }
+        .question-nav-btn { transition: all 0.2s ease; width: 40px; height: 40px; border-radius: 12px; font-weight: 600; }
+        .question-nav-btn:hover { transform: scale(1.05); }
+        .question-nav-btn.active { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); color: white; border: none; box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3); }
+        .question-nav-btn.answered { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; }
+        .question-nav-btn.flagged { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; border: none; position: relative; }
+        .question-nav-btn.flagged::after { content: "🚩"; position: absolute; top: -5px; right: -5px; font-size: 12px; }
+        .flag-btn { transition: all 0.2s ease; }
+        .flag-btn.flagged { background-color: #fef3c7; border-color: #f59e0b; color: #d97706; }
+        .progress-bar { transition: width 0.5s ease-out; }
+        .result-card { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .latex-content { font-size: 1rem; line-height: 1.5; }
+        .latex-content mjx-container { overflow-x: auto; overflow-y: hidden; display: inline-block; }
+        mjx-container[jax="CHTML"][display="true"] { margin: 0.5em 0; overflow-x: auto; overflow-y: hidden; }
+        @media (max-width: 768px) { .option-item { padding: 12px !important; } .option-text { font-size: 14px; } .question-nav-btn { width: 36px; height: 36px; font-size: 14px; } .latex-content { font-size: 14px; } }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #dc2626; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 4px; }
+        .review-item { transition: all 0.2s ease; }
+        .review-item:hover { transform: translateX(4px); }
         
-        body {
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-            min-height: 100vh;
+        /* MathJax processing indicator */
+        .math-processing {
+            opacity: 0.7;
         }
-        
-        .quiz-card {
-            animation: slideUp 0.5s ease-out;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Option styles */
-        .option-item {
-            transition: all 0.2s ease;
-            cursor: pointer;
-            border: 2px solid #e5e7eb;
-            background: white;
-        }
-        
-        .option-item:hover:not(.disabled) {
-            transform: translateX(4px);
-            border-color: #dc2626;
-            background-color: #fef2f2;
-        }
-        
-        .option-item.selected-correct {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-color: #10b981;
-            color: white;
-        }
-        
-        .option-item.selected-correct .option-marker {
-            background: white;
-            color: #10b981;
-        }
-        
-        .option-item.selected-wrong {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-            border-color: #ef4444;
-            color: white;
-        }
-        
-        .option-item.selected-wrong .option-marker {
-            background: white;
-            color: #ef4444;
-        }
-        
-        .option-item.correct-answer {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-color: #10b981;
-            color: white;
-            opacity: 0.8;
-        }
-        
-        .option-item.correct-answer .option-marker {
-            background: white;
-            color: #10b981;
-        }
-        
-        .option-item.selected {
-            border-color: #dc2626;
-            background-color: #fef2f2;
-        }
-        
-        .option-item.selected .option-marker {
-            background-color: #dc2626;
-            color: white;
-        }
-        
-        .option-marker {
-            width: 28px;
-            height: 28px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background-color: #f3f4f6;
-            transition: all 0.2s ease;
-            font-weight: bold;
-        }
-        
-        /* Question navigation */
-        .question-nav-btn {
-            transition: all 0.2s ease;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            font-weight: 600;
-        }
-        
-        .question-nav-btn:hover {
-            transform: scale(1.05);
-        }
-        
-        .question-nav-btn.active {
-            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-            color: white;
-            border: none;
-            box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3);
-        }
-        
-        .question-nav-btn.answered {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border: none;
-        }
-        
-        .question-nav-btn.flagged {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            border: none;
-            position: relative;
-        }
-        
-        .question-nav-btn.flagged::after {
-            content: "🚩";
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            font-size: 12px;
-        }
-        
-        /* Flag button */
-        .flag-btn {
-            transition: all 0.2s ease;
-        }
-        
-        .flag-btn.flagged {
-            background-color: #fef3c7;
-            border-color: #f59e0b;
-            color: #d97706;
-        }
-        
-        /* Progress bar */
-        .progress-bar {
-            transition: width 0.5s ease-out;
-        }
-        
-        /* Result card */
-        .result-card {
-            animation: fadeIn 0.5s ease-out;
-        }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        
-        /* LaTeX content */
-        .latex-content {
-            font-size: 1rem;
-            line-height: 1.5;
-        }
-        
-        .latex-content mjx-container {
-            overflow-x: auto;
-            overflow-y: hidden;
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #dc2626;
-            border-radius: 4px;
-        }
-        
-        /* Mobile optimizations */
-        @media (max-width: 768px) {
-            .option-item {
-                padding: 12px !important;
-            }
-            
-            .option-text {
-                font-size: 14px;
-            }
-            
-            .question-nav-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 14px;
-            }
-        }
-        
-        /* Loading spinner */
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #dc2626;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Review section */
-        .review-item {
-            transition: all 0.2s ease;
-        }
-        
-        .review-item:hover {
-            transform: translateX(4px);
+        .math-processed {
+            opacity: 1;
         }
     </style>
 </head>
@@ -256,15 +87,14 @@
                 <span>Quay lại thư viện</span>
             </a>
             <h1 class="text-2xl md:text-3xl font-bold text-white mb-2">
-                <i class="fas fa-graduation-cap mr-3"></i>
+                <i class="fas fa-database mr-3"></i>
                 Kiểm tra kiến thức
             </h1>
-            <p class="text-white/80 text-sm">Lý thuyết cơ sở dữ liệu - Chương 2</p>
+            <p class="text-white/80 text-sm">Lý thuyết cơ sở dữ liệu - Chương 2: Phụ thuộc hàm & Chuẩn hóa</p>
         </div>
 
         <!-- Quiz Container -->
         <div id="quizContainer" class="quiz-card">
-            <!-- Loading -->
             <div class="bg-white rounded-xl shadow-lg p-8 text-center">
                 <div class="spinner mx-auto mb-4"></div>
                 <p class="text-gray-600">Đang tải bài kiểm tra...</p>
@@ -274,9 +104,7 @@
         <!-- Result Modal -->
         <div id="resultModal" class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 hidden p-4">
             <div class="result-card bg-white rounded-2xl max-w-md w-full p-6 text-center">
-                <div id="resultIcon" class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-check-circle text-5xl text-green-500"></i>
-                </div>
+                <div id="resultIcon" class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"></div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Kết quả bài kiểm tra</h2>
                 <p class="text-gray-600 mb-4">Bạn đã hoàn thành bài kiểm tra</p>
                 <div class="text-4xl font-bold text-red-600 mb-4">
@@ -308,9 +136,7 @@
                         <i class="fas fa-times text-gray-600"></i>
                     </button>
                 </div>
-                <div id="reviewContent" class="p-4 space-y-4">
-                    <!-- Review content will be inserted here -->
-                </div>
+                <div id="reviewContent" class="p-4 space-y-4"></div>
             </div>
         </div>
     </div>
@@ -318,12 +144,13 @@
     <script>
         // ==================== CẤU HÌNH ====================
         const CONFIG = {
-            SHUFFLE_QUESTIONS: true,  // Bật/tắt trộn câu hỏi
-            SHUFFLE_OPTIONS: false,    // Bật/tắt trộn đáp án trong mỗi câu
-            AUTO_SAVE: true,          // Tự động lưu tiến trình
-            SAVE_KEY: 'quiz_progress_csdl_chuong2'  // Key lưu trong localStorage
+            SHUFFLE_QUESTIONS: true,
+            SHUFFLE_OPTIONS: false,
+            AUTO_SAVE: true,
+            SAVE_KEY: 'quiz_csdl_lythuyet_v2'
         };
         
+        // ==================== DỮ LIỆU CÂU HỎI ====================
                 // ==================== DỮ LIỆU CÂU HỎI GỐC ====================
         const originalQuestions = [
             {
@@ -653,15 +480,12 @@
             }
         ];
 
-        // Biến toàn cục
-        let currentQuestions = [];      // Câu hỏi sau khi xử lý (có thể đã trộn)
-        let userAnswers = [];           // Câu trả lời của user
-        let flaggedQuestions = [];      // Các câu đã gắn cờ
+        let currentQuestions = [];
+        let userAnswers = [];
+        let flaggedQuestions = [];
         let currentQuestion = 0;
         let quizSubmitted = false;
-        let quizStarted = false;
-
-        // ==================== HÀM XỬ LÝ TRỘN ====================
+        
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -669,125 +493,124 @@
             }
             return array;
         }
-
-        function shuffleQuestion(question, index) {
-            const shuffledQuestion = { ...question, id: index };
-            
-            if (CONFIG.SHUFFLE_OPTIONS && question.type !== 'custom') {
-                // Tạo mapping giữa index cũ và mới
-                const originalIndices = question.options.map((_, idx) => idx);
-                const shuffledIndices = shuffleArray([...originalIndices]);
-                
-                // Trộn đáp án
-                shuffledQuestion.options = shuffledIndices.map(idx => question.options[idx]);
-                
-                // Cập nhật đáp án đúng theo mapping mới
-                shuffledQuestion.correct = question.correct.map(oldIdx => 
-                    shuffledIndices.indexOf(oldIdx)
-                ).sort();
-            } else {
-                shuffledQuestion.options = [...question.options];
-                shuffledQuestion.correct = [...question.correct];
-            }
-            
-            return shuffledQuestion;
-        }
-
+        
         function initializeQuiz() {
-            // Tạo bản sao câu hỏi
             let questions = [...originalQuestions];
-            
-            // Trộn câu hỏi nếu bật
             if (CONFIG.SHUFFLE_QUESTIONS) {
                 questions = shuffleArray(questions);
             }
-            
-            // Xử lý trộn đáp án cho từng câu
-            currentQuestions = questions.map((q, idx) => shuffleQuestion(q, idx));
-            
-            // Khởi tạo answers và flags
+            currentQuestions = questions.map((q, idx) => ({ ...q, id: idx }));
             userAnswers = new Array(currentQuestions.length).fill(null).map(() => []);
             flaggedQuestions = new Array(currentQuestions.length).fill(false);
         }
-
-        // ==================== LOCALSTORAGE ====================
+        
         function saveProgress() {
             if (!CONFIG.AUTO_SAVE || quizSubmitted) return;
-            
             const progress = {
                 currentQuestions: currentQuestions,
                 userAnswers: userAnswers,
                 flaggedQuestions: flaggedQuestions,
                 currentQuestion: currentQuestion,
-                quizStarted: true,
-                timestamp: new Date().toISOString(),
-                configSnapshot: {
-                    SHUFFLE_QUESTIONS: CONFIG.SHUFFLE_QUESTIONS,
-                    SHUFFLE_OPTIONS: CONFIG.SHUFFLE_OPTIONS
-                }
+                timestamp: new Date().toISOString()
             };
-            
             localStorage.setItem(CONFIG.SAVE_KEY, JSON.stringify(progress));
         }
-
+        
         function loadProgress() {
             const saved = localStorage.getItem(CONFIG.SAVE_KEY);
             if (!saved) return false;
-            
             try {
                 const progress = JSON.parse(saved);
-                // Kiểm tính hợp lệ của config
-                if (progress.configSnapshot.SHUFFLE_QUESTIONS === CONFIG.SHUFFLE_QUESTIONS &&
-                    progress.configSnapshot.SHUFFLE_OPTIONS === CONFIG.SHUFFLE_OPTIONS) {
+                if (progress.currentQuestions && progress.currentQuestions.length === originalQuestions.length) {
                     currentQuestions = progress.currentQuestions;
                     userAnswers = progress.userAnswers;
                     flaggedQuestions = progress.flaggedQuestions;
                     currentQuestion = progress.currentQuestion;
-                    quizStarted = progress.quizStarted;
                     return true;
                 }
-            } catch (e) {
-                console.error('Error loading progress:', e);
-            }
+            } catch (e) {}
             return false;
         }
-
+        
         function clearProgress() {
             localStorage.removeItem(CONFIG.SAVE_KEY);
         }
-
-        // ==================== RENDER MATH ====================
-        function renderMath() {
+        
+        // Hàm render LaTeX - gọi sau khi nội dung đã được thêm vào DOM
+        function renderLatex() {
             if (window.MathJax) {
-                MathJax.typesetPromise();
+                // Tìm tất cả phần tử có class latex-content và xử lý
+                const elements = document.querySelectorAll('.latex-content');
+                if (elements.length > 0) {
+                    MathJax.typesetPromise(elements).catch(err => console.log('MathJax error:', err));
+                }
             }
         }
-
-        // ==================== KIỂM TRA ĐÁP ÁN ====================
+        
+        function getAnsweredCount() {
+            return userAnswers.filter(ans => ans && ans.length > 0).length;
+        }
+        
+        function toggleOption(questionIdx, optionIdx) {
+            if (quizSubmitted) return;
+            const question = currentQuestions[questionIdx];
+            if (question.type === 'single') {
+                userAnswers[questionIdx] = [optionIdx];
+            } else {
+                if (!userAnswers[questionIdx]) userAnswers[questionIdx] = [];
+                const index = userAnswers[questionIdx].indexOf(optionIdx);
+                if (index === -1) userAnswers[questionIdx].push(optionIdx);
+                else userAnswers[questionIdx].splice(index, 1);
+            }
+            renderQuiz();
+            saveProgress();
+        }
+        
+        function toggleFlag(questionIdx) {
+            if (quizSubmitted) return;
+            flaggedQuestions[questionIdx] = !flaggedQuestions[questionIdx];
+            renderQuiz();
+            saveProgress();
+        }
+        
+        function goToQuestion(index) {
+            if (quizSubmitted) return;
+            currentQuestion = index;
+            renderQuiz();
+            saveProgress();
+        }
+        
         function checkAnswer(question, userAnswer) {
             const correct = question.correct;
             const sortedUser = [...userAnswer].sort();
             const sortedCorrect = [...correct].sort();
-            
             if (question.type === 'single') {
                 return userAnswer.length === 1 && userAnswer[0] === correct[0];
-            } else {
-                return sortedUser.length === sortedCorrect.length && 
-                       sortedUser.every((val, i) => val === sortedCorrect[i]);
             }
+            return sortedUser.length === sortedCorrect.length && 
+                   sortedUser.every((val, i) => val === sortedCorrect[i]);
         }
-
-        // ==================== RENDER QUIZ ====================
+        
+        function calculateScore() {
+            let correctCount = 0;
+            currentQuestions.forEach((question, idx) => {
+                if (checkAnswer(question, userAnswers[idx] || [])) correctCount++;
+            });
+            return { score: correctCount, total: currentQuestions.length, percentage: (correctCount / currentQuestions.length) * 100 };
+        }
+        
         function renderQuiz() {
             if (!currentQuestions.length) return;
             
             const container = document.getElementById('quizContainer');
             const question = currentQuestions[currentQuestion];
-            const isAnswered = userAnswers[currentQuestion] && userAnswers[currentQuestion].length > 0;
             const isFlagged = flaggedQuestions[currentQuestion];
             
+            // Sử dụng textLatex nếu có, nếu không dùng text thường
+            const questionText = question.textLatex || question.text;
+            const optionsList = question.optionsLatex || question.options;
+            
             container.innerHTML = `
-                <!-- Progress Bar -->
                 <div class="bg-white rounded-xl shadow-lg mb-4 p-4">
                     <div class="flex justify-between text-sm text-gray-600 mb-2 flex-wrap gap-2">
                         <span><i class="fas fa-question-circle text-red-600 mr-1"></i>Câu ${currentQuestion + 1}/${currentQuestions.length}</span>
@@ -798,42 +621,33 @@
                         <div class="progress-bar bg-red-600 h-2 rounded-full" style="width: ${((currentQuestion + 1) / currentQuestions.length) * 100}%"></div>
                     </div>
                 </div>
-
-                <!-- Question Navigation -->
                 <div class="bg-white rounded-xl shadow-lg p-4 mb-4 overflow-x-auto">
                     <div class="flex gap-2 justify-center min-w-max">
                         ${currentQuestions.map((_, idx) => `
                             <button class="question-nav-btn ${userAnswers[idx] && userAnswers[idx].length > 0 ? 'answered' : ''} ${flaggedQuestions[idx] ? 'flagged' : ''} ${idx === currentQuestion ? 'active' : ''}"
-                                    onclick="goToQuestion(${idx})">
-                                ${idx + 1}
-                            </button>
+                                    onclick="goToQuestion(${idx})">${idx + 1}</button>
                         `).join('')}
                     </div>
                 </div>
-
-                <!-- Current Question -->
                 <div class="bg-white rounded-xl shadow-lg p-6">
                     <div class="flex items-start justify-between gap-3 mb-4">
                         <div class="flex items-start gap-3 flex-1">
                             <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
                                 <span class="text-red-600 font-bold">${currentQuestion + 1}</span>
                             </div>
-                            <h3 class="text-lg font-semibold text-gray-800 flex-1 latex-content">${question.text}</h3>
+                            <h3 class="text-lg font-semibold text-gray-800 flex-1 latex-content">${questionText}</h3>
                         </div>
                         <button id="flagBtn" class="flag-btn w-10 h-10 rounded-lg border-2 ${isFlagged ? 'flagged border-orange-500 bg-orange-50 text-orange-600' : 'border-gray-300 bg-white text-gray-400 hover:border-orange-400'}"
-                                onclick="toggleFlag(${currentQuestion})">
-                            <i class="fas fa-flag"></i>
-                        </button>
+                                onclick="toggleFlag(${currentQuestion})"><i class="fas fa-flag"></i></button>
                     </div>
-                    
                     <div class="text-sm text-gray-500 mb-4 pb-2 border-b border-gray-100">
                         <i class="fas ${question.type === 'single' ? 'fa-dot-circle' : 'fa-check-square'} mr-1"></i>
                         ${question.type === 'single' ? 'Chọn một đáp án' : 'Chọn nhiều đáp án'}
                     </div>
-
                     <div class="space-y-3">
-                        ${question.options.map((option, idx) => {
+                        ${optionsList.map((option, idx) => {
                             const isSelected = userAnswers[currentQuestion]?.includes(idx) || false;
+                            const optionText = option;
                             return `
                                 <div class="option-item p-4 rounded-xl transition-all ${!quizSubmitted ? 'cursor-pointer' : ''} ${isSelected ? 'selected' : ''}"
                                      onclick="${!quizSubmitted ? `toggleOption(${currentQuestion}, ${idx})` : ''}">
@@ -841,198 +655,90 @@
                                         <div class="option-marker flex-shrink-0 ${isSelected ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-600'}">
                                             ${String.fromCharCode(65 + idx)}
                                         </div>
-                                        <div class="option-text flex-1 text-gray-700 latex-content">${option}</div>
+                                        <div class="option-text flex-1 text-gray-700 latex-content">${optionText}</div>
                                     </div>
                                 </div>
                             `;
                         }).join('')}
                     </div>
-
                     <div class="flex justify-between mt-6 pt-4 border-t border-gray-200">
                         <button id="prevBtn" class="px-5 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition ${currentQuestion === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
-                                ${currentQuestion === 0 ? 'disabled' : ''}>
-                            <i class="fas fa-chevron-left mr-2"></i>Câu trước
-                        </button>
+                                ${currentQuestion === 0 ? 'disabled' : ''}><i class="fas fa-chevron-left mr-2"></i>Câu trước</button>
                         <div class="flex gap-2">
-                            ${currentQuestion === currentQuestions.length - 1 ? `
-                                <button id="submitBtn" class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                                    <i class="fas fa-check-circle mr-2"></i>Nộp bài
-                                </button>
-                            ` : `
-                                <button id="nextBtn" class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                                    Câu tiếp theo<i class="fas fa-chevron-right ml-2"></i>
-                                </button>
-                            `}
+                            ${currentQuestion === currentQuestions.length - 1 ? 
+                                `<button id="submitBtn" class="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"><i class="fas fa-check-circle mr-2"></i>Nộp bài</button>` :
+                                `<button id="nextBtn" class="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Câu tiếp theo<i class="fas fa-chevron-right ml-2"></i></button>`
+                            }
                         </div>
                     </div>
                 </div>
             `;
-
-            // Attach event listeners
+            
             document.getElementById('prevBtn')?.addEventListener('click', () => {
-                if (currentQuestion > 0) {
-                    currentQuestion--;
-                    renderQuiz();
-                    saveProgress();
-                }
+                if (currentQuestion > 0) { currentQuestion--; renderQuiz(); saveProgress(); }
             });
-
             const nextBtn = document.getElementById('nextBtn');
             if (nextBtn) {
                 nextBtn.addEventListener('click', () => {
-                    if (currentQuestion < currentQuestions.length - 1) {
-                        currentQuestion++;
-                        renderQuiz();
-                        saveProgress();
-                    }
+                    if (currentQuestion < currentQuestions.length - 1) { currentQuestion++; renderQuiz(); saveProgress(); }
                 });
             }
-
-            const submitBtn = document.getElementById('submitBtn');
-            if (submitBtn) {
-                submitBtn.addEventListener('click', submitQuiz);
-            }
+            document.getElementById('submitBtn')?.addEventListener('click', submitQuiz);
             
-            // Render LaTeX
-            setTimeout(() => renderMath(), 100);
+            // Gọi render LaTeX sau khi DOM đã được cập nhật
+            setTimeout(() => renderLatex(), 100);
         }
-
-        function toggleOption(questionIdx, optionIdx) {
-            if (quizSubmitted) return;
-            
-            const question = currentQuestions[questionIdx];
-            
-            if (question.type === 'single') {
-                userAnswers[questionIdx] = [optionIdx];
-            } else {
-                if (!userAnswers[questionIdx]) {
-                    userAnswers[questionIdx] = [];
-                }
-                const index = userAnswers[questionIdx].indexOf(optionIdx);
-                if (index === -1) {
-                    userAnswers[questionIdx].push(optionIdx);
-                } else {
-                    userAnswers[questionIdx].splice(index, 1);
-                }
-            }
-            
-            renderQuiz();
-            saveProgress();
-        }
-
-        function toggleFlag(questionIdx) {
-            if (quizSubmitted) return;
-            flaggedQuestions[questionIdx] = !flaggedQuestions[questionIdx];
-            renderQuiz();
-            saveProgress();
-        }
-
-        function getAnsweredCount() {
-            return userAnswers.filter(ans => ans && ans.length > 0).length;
-        }
-
-        function goToQuestion(index) {
-            if (quizSubmitted) return;
-            currentQuestion = index;
-            renderQuiz();
-            saveProgress();
-        }
-
-        function calculateScore() {
-            let correctCount = 0;
-            
-            currentQuestions.forEach((question, idx) => {
-                const userAnswer = userAnswers[idx] || [];
-                if (checkAnswer(question, userAnswer)) {
-                    correctCount++;
-                }
-            });
-            
-            return {
-                score: correctCount,
-                total: currentQuestions.length,
-                percentage: (correctCount / currentQuestions.length) * 100
-            };
-        }
-
+        
         function submitQuiz() {
             const unanswered = getAnsweredCount();
-            if (unanswered < currentQuestions.length) {
-                if (!confirm(`Bạn còn ${currentQuestions.length - unanswered} câu chưa trả lời. Bạn có chắc muốn nộp bài?`)) {
-                    return;
-                }
-            }
-            
+            if (unanswered < currentQuestions.length && !confirm(`Bạn còn ${currentQuestions.length - unanswered} câu chưa trả lời. Bạn có chắc muốn nộp bài?`)) return;
             quizSubmitted = true;
             clearProgress();
             showResult();
         }
-
+        
         function showResult() {
             const result = calculateScore();
             const percentage = result.percentage;
-            
             document.getElementById('scoreDisplay').textContent = result.score;
             document.getElementById('totalDisplay').textContent = result.total;
             document.getElementById('scoreBar').style.width = `${percentage}%`;
             
-            let message = '';
-            let icon = '';
-            
-            if (percentage >= 80) {
-                message = '🎉 Xuất sắc! Bạn đã nắm vững kiến thức. Hãy tiếp tục phát huy!';
-                icon = '<i class="fas fa-trophy text-5xl text-yellow-500"></i>';
-            } else if (percentage >= 60) {
-                message = '👍 Khá tốt! Bạn hiểu bài nhưng cần ôn tập thêm một số phần.';
-                icon = '<i class="fas fa-smile text-5xl text-green-500"></i>';
-            } else if (percentage >= 40) {
-                message = '📚 Cố gắng hơn nhé! Hãy xem lại đáp án để hiểu rõ hơn.';
-                icon = '<i class="fas fa-book text-5xl text-blue-500"></i>';
-            } else {
-                message = '💪 Đừng nản! Hãy xem lại bài giảng và thử làm lại bài kiểm tra.';
-                icon = '<i class="fas fa-heart text-5xl text-red-500"></i>';
-            }
+            let message = '', icon = '';
+            if (percentage >= 80) { message = '🎉 Xuất sắc! Bạn đã nắm vững kiến thức.'; icon = '<i class="fas fa-trophy text-5xl text-yellow-500"></i>'; }
+            else if (percentage >= 60) { message = '👍 Khá tốt! Bạn hiểu bài nhưng cần ôn tập thêm.'; icon = '<i class="fas fa-smile text-5xl text-green-500"></i>'; }
+            else if (percentage >= 40) { message = '📚 Cố gắng hơn nhé! Hãy xem lại đáp án.'; icon = '<i class="fas fa-book text-5xl text-blue-500"></i>'; }
+            else { message = '💪 Đừng nản! Hãy xem lại bài giảng và thử lại.'; icon = '<i class="fas fa-heart text-5xl text-red-500"></i>'; }
             
             document.getElementById('resultIcon').innerHTML = icon;
             document.getElementById('resultMessage').innerHTML = message;
             document.getElementById('resultModal').classList.remove('hidden');
-            
-            // Hiển thị đáp án ngay trên quiz
             showAnswersInQuiz();
         }
         
         function showAnswersInQuiz() {
             const container = document.getElementById('quizContainer');
-            const question = currentQuestions[currentQuestion];
-            
-            // Cập nhật style cho các đáp án
             const optionsDiv = container.querySelectorAll('.option-item');
+            const question = currentQuestions[currentQuestion];
             optionsDiv.forEach((opt, idx) => {
-                const isUserCorrect = checkAnswer(question, userAnswers[currentQuestion]);
                 const isSelected = userAnswers[currentQuestion]?.includes(idx);
                 const isCorrectAnswer = question.correct.includes(idx);
-                
                 opt.classList.remove('selected', 'selected-correct', 'selected-wrong', 'correct-answer');
-                
-                if (isSelected && isCorrectAnswer) {
-                    opt.classList.add('selected-correct');
-                } else if (isSelected && !isCorrectAnswer) {
-                    opt.classList.add('selected-wrong');
-                } else if (!isSelected && isCorrectAnswer) {
-                    opt.classList.add('correct-answer');
-                }
+                if (isSelected && isCorrectAnswer) opt.classList.add('selected-correct');
+                else if (isSelected && !isCorrectAnswer) opt.classList.add('selected-wrong');
+                else if (!isSelected && isCorrectAnswer) opt.classList.add('correct-answer');
             });
         }
-
+        
         function showReview() {
             const reviewContent = document.getElementById('reviewContent');
-            const result = calculateScore();
-            
             reviewContent.innerHTML = currentQuestions.map((question, idx) => {
                 const userAnswer = userAnswers[idx] || [];
                 const isCorrect = checkAnswer(question, userAnswer);
                 const userAnswerText = userAnswer.map(ans => String.fromCharCode(65 + ans)).join(', ') || 'Chưa trả lời';
                 const correctAnswerText = question.correct.map(ans => String.fromCharCode(65 + ans)).join(', ');
+                const explanationText = question.explanationLatex || question.explanation;
+                const questionText = question.textLatex || question.text;
                 
                 return `
                     <div class="review-item border rounded-xl p-4 ${isCorrect ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}">
@@ -1040,82 +746,48 @@
                             <div class="w-6 h-6 rounded-full ${isCorrect ? 'bg-green-500' : 'bg-red-500'} text-white flex items-center justify-center text-xs flex-shrink-0">
                                 ${isCorrect ? '<i class="fas fa-check text-xs"></i>' : '<i class="fas fa-times text-xs"></i>'}
                             </div>
-                            <h4 class="font-semibold text-gray-800 flex-1 latex-content">Câu ${idx + 1}: ${question.text}</h4>
+                            <h4 class="font-semibold text-gray-800 flex-1 latex-content">Câu ${idx + 1}: ${questionText}</h4>
                         </div>
                         <div class="ml-8 space-y-2 text-sm">
-                            <p><span class="font-medium text-gray-600">Đáp án của bạn:</span> 
-                                <span class="${isCorrect ? 'text-green-700 font-medium' : 'text-red-700 font-medium'}">${userAnswerText}</span>
-                            </p>
-                            <p><span class="font-medium text-gray-600">Đáp án đúng:</span> 
-                                <span class="text-green-700 font-medium">${correctAnswerText}</span>
-                            </p>
-                            <p class="mt-2 text-gray-600 bg-white/70 p-3 rounded-lg latex-content">
-                                <i class="fas fa-info-circle text-blue-500 mr-1"></i>
-                                ${question.explanation}
-                            </p>
+                            <p><span class="font-medium text-gray-600">Đáp án của bạn:</span> <span class="${isCorrect ? 'text-green-700' : 'text-red-700'}">${userAnswerText}</span></p>
+                            <p><span class="font-medium text-gray-600">Đáp án đúng:</span> <span class="text-green-700">${correctAnswerText}</span></p>
+                            <p class="mt-2 text-gray-600 bg-white/70 p-3 rounded-lg latex-content"><i class="fas fa-info-circle text-blue-500 mr-1"></i>${explanationText}</p>
                         </div>
                     </div>
                 `;
             }).join('');
-            
-            renderMath();
+            setTimeout(() => renderLatex(), 100);
             document.getElementById('reviewModal').classList.remove('hidden');
             document.getElementById('resultModal').classList.add('hidden');
         }
-
+        
         function retakeQuiz() {
-            if (confirm('Làm lại bài sẽ xóa toàn bộ tiến trình hiện tại. Bạn có chắc?')) {
+            if (confirm('Làm lại bài sẽ xóa toàn bộ tiến trình. Bạn có chắc?')) {
                 clearProgress();
                 initializeQuiz();
                 userAnswers = new Array(currentQuestions.length).fill(null).map(() => []);
                 flaggedQuestions = new Array(currentQuestions.length).fill(false);
                 currentQuestion = 0;
                 quizSubmitted = false;
-                quizStarted = true;
                 document.getElementById('resultModal').classList.add('hidden');
                 document.getElementById('reviewModal').classList.add('hidden');
                 renderQuiz();
                 saveProgress();
             }
         }
-
-        // ==================== KHỞI TẠO ====================
-        function init() {
-            const hasProgress = loadProgress();
-            
-            if (!hasProgress) {
-                initializeQuiz();
-                userAnswers = new Array(currentQuestions.length).fill(null).map(() => []);
-                flaggedQuestions = new Array(currentQuestions.length).fill(false);
-                currentQuestion = 0;
-                quizStarted = true;
-            }
-            
-            renderQuiz();
-            saveProgress();
-        }
-
+        
         // Event listeners
         document.getElementById('reviewAnswersBtn')?.addEventListener('click', showReview);
         document.getElementById('retakeQuizBtn')?.addEventListener('click', retakeQuiz);
-        document.getElementById('closeReviewBtn')?.addEventListener('click', () => {
-            document.getElementById('reviewModal').classList.add('hidden');
-        });
+        document.getElementById('closeReviewBtn')?.addEventListener('click', () => document.getElementById('reviewModal').classList.add('hidden'));
+        document.getElementById('resultModal')?.addEventListener('click', (e) => { if (e.target === document.getElementById('resultModal')) document.getElementById('resultModal').classList.add('hidden'); });
+        document.getElementById('reviewModal')?.addEventListener('click', (e) => { if (e.target === document.getElementById('reviewModal')) document.getElementById('reviewModal').classList.add('hidden'); });
         
-        document.getElementById('resultModal')?.addEventListener('click', (e) => {
-            if (e.target === document.getElementById('resultModal')) {
-                document.getElementById('resultModal').classList.add('hidden');
-            }
-        });
-        
-        document.getElementById('reviewModal')?.addEventListener('click', (e) => {
-            if (e.target === document.getElementById('reviewModal')) {
-                document.getElementById('reviewModal').classList.add('hidden');
-            }
-        });
-
-        // Start
-        init();
+        // Khởi tạo
+        const hasProgress = loadProgress();
+        if (!hasProgress) initializeQuiz();
+        renderQuiz();
+        if (!hasProgress) saveProgress();
     </script>
 </body>
 </html>
