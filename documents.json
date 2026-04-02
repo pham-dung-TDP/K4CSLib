@@ -25,5 +25,14 @@
     "category": "Cơ sở dữ liệu",
     "subcategory": "Cơ bản",
     "thumbnail": "https://placehold.co/600x400/15b30c/FFFFFF?text=Cơ sở dữ liệu&font=roboto"
+  },
+  {
+    "id": "tncsdl-c3",
+    "title": "Trắc nghiệm Lý thuyết cơ sở dữ liệu - Chương 3",
+    "description": "Lý thuyết cơ sở dữ liệu - Chương 3",
+    "url": "docs/csdl/tn-c3.html",
+    "category": "Cơ sở dữ liệu",
+    "subcategory": "Cơ bản",
+    "thumbnail": "https://placehold.co/600x400/15b30c/FFFFFF?text=Cơ sở dữ liệu&font=roboto"
   }
 ]

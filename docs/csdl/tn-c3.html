@@ -212,7 +212,7 @@
                 <i class="fas fa-database mr-3"></i>
                 Kiểm tra kiến thức
             </h1>
-            <p class="text-white/80 text-sm">Lý thuyết cơ sở dữ liệu - Chương 2</p>
+            <p class="text-white/80 text-sm">Lý thuyết cơ sở dữ liệu - Chương 3</p>
         </div>
 
         <!-- Main Content: 2 columns layout -->
@@ -297,334 +297,335 @@
             SHUFFLE_QUESTIONS: true,
             SHUFFLE_OPTIONS: false,
             AUTO_SAVE: true,
-            SAVE_KEY: 'quiz_progress_csdl_chuong2'
+            SAVE_KEY: 'quiz_progress_csdl_chuong3'
         };
         
+                // ==================== DỮ LIỆU CÂU HỎI GỐC ====================
         const originalQuestions = [
             {
                 id: 1,
-                text: "Cho $R(U)$ là sơ đồ quan hệ với $U$ là tập thuộc tính. $X, Y, Z$ là tập con của $U$. Tính chất tăng trưởng (augmentation) của hệ tiên đề Armstrong: với điều kiện nào dưới đây thì $YZ$ là phụ thuộc hàm vào $XZ$?",
+                text: "SQL là tên viết tắt của:",
                 type: "single",
                 options: [
-                    "$X$ là phụ thuộc hàm vào $Y$",
-                    "$Y$ là phụ thuộc hàm vào $X$",
-                    "$X$ không là phụ thuộc hàm vào $Y$",
-                    "$Y$ không là phụ thuộc hàm vào $X$"
+                    "Structured Query Language",
+                    "Structure Query Language",
+                    "Stored Queation Language",
+                    "Standard Question Layer"
                 ],
-                correct: [1],
-                explanation: "Luật tăng trưởng: Nếu X→Y thì XZ→YZ. Ở đây đề hỏi ngược lại, để có XZ→YZ thì cần gốc là X→Y. (Đáp án b ghi Y→X có thể là lỗi đánh máy trong đề gốc, đúng lý thuyết phải là X→Y)."
+                correct: [0],
+                explanation: "SQL là viết tắt của Structured Query Language (Ngôn ngữ truy vấn có cấu trúc)."
             },
             {
                 id: 2,
-                text: "Cho $R(U)$ là sơ đồ quan hệ với $U$ là tập thuộc tính. $X, Y, Z$ là tập con của $U$. Tính chất: nếu $Y$ là phụ thuộc hàm vào $X$, $Z$ là phụ thuộc hàm vào $Y$ thì $Z$ là phụ thuộc hàm vào $X$ là tính chất gì trong hệ tiên đề Armstrong?",
+                text: "Phát biểu nào sau đây đúng với Phép chọn?",
                 type: "single",
                 options: [
-                    "Phản xạ (reflexivity)",
-                    "Tăng trưởng (augmentation)",
-                    "Bắc cầu (transitivity)",
-                    "Kết hợp (associativity)"
+                    "Phép chọn dùng để trích rút các bộ giá trị thỏa mãn điều kiện chọn từ một quan hệ.",
+                    "Phép chọn dùng để trích rút các cột ứng với các thuộc tính nào đó của một quan hệ.",
+                    "Phép chọn là phép kết nối bằng tại thuộc tính cùng tên của 2 quan hệ.",
+                    "Phép chọn là phép nối các bộ giá trị của hai quan hệ đã cho."
                 ],
-                correct: [2],
-                explanation: "Đây là định nghĩa của tính chất Bắc cầu: X→Y và Y→Z ⇒ X→Z."
+                correct: [0],
+                explanation: "Phép chọn (σ) dùng để lọc các hàng (bộ) thỏa mãn điều kiện."
             },
             {
                 id: 3,
-                text: "Cho $R(U)$ là sơ đồ quan hệ với $U$ là tập thuộc tính. $X, Y, Z$ là tập con của $U$. Tính chất Phản xạ (reflexivity) của hệ tiên đề Armstrong: với điều kiện nào dưới đây thì $Y$ là phụ thuộc hàm vào $X$?",
+                text: "Phát biểu nào sau đây đúng với Phép chiếu?",
                 type: "single",
                 options: [
-                    "$X$ là con của $Y$",
-                    "$Y$ là con của $X$",
-                    "$X$ không là con của $Y$",
-                    "$Y$ không là con của $X$"
+                    "Phép chiếu dùng để trích rút các bộ giá trị thỏa mãn điều kiện chọn từ một quan hệ.",
+                    "Phép chiếu dùng để trích rút các cột ứng với các thuộc tính nào đó của một quan hệ.",
+                    "Phép chiếu là phép kết nối bằng tại thuộc tính cùng tên của 2 quan hệ.",
+                    "Phép chiếu là phép nối các bộ giá trị của hai quan hệ đã cho."
                 ],
                 correct: [1],
-                explanation: "Luật phản xạ: Nếu Y ⊆ X (Y là con của X) thì X → Y."
+                explanation: "Phép chiếu (Π) dùng để trích xuất các cột (thuộc tính)."
             },
             {
                 id: 4,
-                text: "Một quan hệ có chứa một miền giá trị của một thuộc tính nào đó là không nguyên tố được gọi là",
+                text: "Phép chiếu còn được gọi là phép gì?",
                 type: "single",
                 options: [
-                    "Quan hệ chuẩn hóa",
-                    "Quan hệ không chuẩn",
-                    "Quan hệ chuẩn hóa loại 1",
-                    "Quan hệ chuẩn hóa loại 2"
+                    "Phép tìm kiếm",
+                    "Phép tìm kiếm theo chiều ngang",
+                    "Phép tìm kiếm theo chiều dọc",
+                    "Tất cả các đáp án trên"
                 ],
-                correct: [1],
-                explanation: "Quan hệ chứa thuộc tính có giá trị không nguyên tử (đa trị hoặc phức hợp) là quan hệ chưa chuẩn hóa."
+                correct: [2],
+                explanation: "Chiếu là lấy cột, nên gọi là tìm kiếm theo chiều dọc."
             },
             {
                 id: 5,
-                text: "Cho $R(U)$ là sơ đồ quan hệ với $U$ là tập thuộc tính. $X, Y, Z$ là tập con của $U$. Luật hợp: Nếu $Y$ là phụ thuộc hàm vào $X$, $Z$ là phụ thuộc hàm vào $X$ thì:",
+                text: "Phép chọn còn được gọi là phép gì?",
                 type: "single",
                 options: [
-                    "$Y$ là phụ thuộc hàm vào $XZ$",
-                    "$Z$ là phụ thuộc hàm vào $XY$",
-                    "$YZ$ là phụ thuộc hàm vào $X$",
-                    "$XZ$ là phụ thuộc hàm vào $YZ$"
+                    "Phép tìm kiếm",
+                    "Phép tìm kiếm theo chiều ngang",
+                    "Phép tìm kiếm theo chiều dọc",
+                    "Tất cả các đáp án trên"
                 ],
-                correct: [2],
-                explanation: "Luật hợp: Nếu X→Y và X→Z thì X→YZ."
+                correct: [1],
+                explanation: "Chọn là lấy hàng, nên gọi là tìm kiếm theo chiều ngang."
             },
             {
                 id: 6,
-                text: "Cho $R(U)$ là sơ đồ quan hệ với $U$ là tập thuộc tính. $X, Y, Z, W$ là tập con của $U$. Luật tựa bắc cầu: Nếu $Y$ là phụ thuộc hàm vào $X$, $Z$ là phụ thuộc hàm vào $WY$ thì:",
+                text: "Điều kiện trong mệnh đề Having tác động trên...?",
                 type: "single",
                 options: [
-                    "$XW$ là phụ thuộc hàm vào $Z$",
-                    "$Z$ là phụ thuộc hàm vào $XW$",
-                    "$XZ$ là phụ thuộc hàm vào $W$",
-                    "$W$ là phụ thuộc hàm vào $XZ$"
+                    "Toàn bộ các bản ghi của bảng",
+                    "Các bản ghi của một nhóm",
+                    "Một bản ghi",
+                    "Cả đáp án a và b"
                 ],
                 correct: [1],
-                explanation: "Luật tựa bắc cầu: Nếu X→Y và WY→Z thì WX→Z."
+                explanation: "HAVING dùng để lọc điều kiện trên các nhóm (sau khi đã GROUP BY)."
             },
             {
                 id: 7,
-                text: "$B$ phụ thuộc hàm vào $A$ ($A \\to B$) được suy dẫn logic từ $F$ bằng cách:",
+                text: "Các thuộc tính trong mệnh đề Group by phải được xuất hiện trong mệnh đề...?",
                 type: "single",
                 options: [
-                    "Áp dụng các quy tắc tách/hợp",
-                    "Áp dụng các quy tắc phản xạ",
-                    "Áp dụng các quy tắc bắc cầu",
-                    "Áp dụng hệ tiên đề Armstrong"
+                    "Select",
+                    "From",
+                    "Where",
+                    "Having"
                 ],
-                correct: [3],
-                explanation: "Hệ tiên đề Armstrong là bộ quy tắc đầy đủ để suy dẫn mọi phụ thuộc hàm logic từ tập F cho trước."
+                correct: [0],
+                explanation: "Các thuộc tính dùng để nhóm trong GROUP BY thường phải xuất hiện trong SELECT để hiển thị kết quả."
             },
             {
                 id: 8,
-                text: "Phát biểu nào đúng với khái niệm Phụ thuộc hàm?",
+                text: "Chọn cú pháp đúng cho lệnh tạo View trong SQL?",
                 type: "single",
                 options: [
-                    "Cho $R(U)$. $X, Y$ là các tập con của $U$, ta nói rằng $X \\to Y$ nếu trên quan hệ $R$ có $t_1[X] = t_2[X]$ thì $t_1[Y] = t_2[Y]$.",
-                    "Cho $R(U)$. $X, Y$ là các tập con của $U$, ta nói rằng $X \\to Y$ nếu trên quan hệ $R$ có $t_1[X] = t_2[X]$ thì $t_1[Y] \\neq t_2[Y]$.",
-                    "Cho $R(U)$. $X, Y$ là các tập con của $U$, ta nói rằng $X \\to Y$ nếu trên quan hệ $R$ có $t_1[X] \\neq t_2[X]$ thì $t_1[Y] = t_2[Y]$.",
-                    "Tất cả các đáp án trên."
+                    "`Create view [(DS cột)] AS mệnh_đề Select`",
+                    "`Create view Tên_View [(DS cột)] mệnh_đề Select`",
+                    "`Create view Tên_View [(DS cột)] AS mệnh_đề Select`",
+                    "`Create view Tên_View [(DS cột)] AS mệnh_đề Where`"
                 ],
-                correct: [0],
-                explanation: "Đây là định nghĩa cơ bản của phụ thuộc hàm: Nếu giá trị vế trái bằng nhau thì giá trị vế phải buộc phải bằng nhau."
+                correct: [2],
+                explanation: "Cú pháp chuẩn: CREATE VIEW Ten_View AS SELECT ..."
             },
             {
                 id: 9,
-                text: "Chọn phát biểu đúng để tìm tập nguồn (TN)?",
+                text: "Chọn cú pháp đúng cho lệnh INSERT trong SQL?",
                 type: "single",
                 options: [
-                    "Tập TN chứa tất cả các thuộc tính xuất hiện ở vế trái (VT) và không xuất hiện ở vế phải (VP) của các phụ thuộc hàm.",
-                    "Tập TN chứa tất cả các thuộc tính xuất hiện ở vế trái (VT) và vế phải (VP) của các phụ thuộc hàm.",
-                    "Tập TN chứa tất cả các thuộc tính không xuất hiện ở VT lẫn VP của các phụ thuộc hàm.",
-                    "Cả đáp án a và c."
+                    "`INSERT INTO (<danh sách các thuộc tính>) VALUES (<danh sách các giá trị>)`",
+                    "`INSERT INTO <tên bảng>(<danh sách các thuộc tính>)`",
+                    "`INSERT INTO <tên bảng>(<danh sách các thuộc tính>) VALUE (<danh sách các giá trị>)`",
+                    "`INSERT INTO <tên bảng>(<danh sách các thuộc tính>) VALUES (<danh sách các giá trị>)`"
                 ],
-                correct: [0],
-                explanation: "Tập nguồn (TN) gồm các thuộc tính chỉ xuất hiện bên vế trái, chắc chắn phải nằm trong khóa."
+                correct: [3],
+                explanation: "Cú pháp chuẩn: INSERT INTO Ten_Bang(Cot) VALUES(Gia_tri)."
             },
             {
                 id: 10,
-                text: "Chọn phát biểu đúng để tìm tập trung gian (TG)?",
+                text: "Chọn cú pháp đúng cho lệnh DELETE trong SQL?",
                 type: "single",
                 options: [
-                    "Tập TG chứa tất cả những thuộc tính xuất hiện ở cả VT lẫn VP của các phụ thuộc hàm.",
-                    "Tập TG chứa tất cả những thuộc tính không xuất hiện ở cả VT lẫn VP của các phụ thuộc hàm.",
-                    "Tập TG chứa tất cả những thuộc tính xuất hiện ở VT của các phụ thuộc hàm.",
-                    "Tập TG chứa tất cả những thuộc tính xuất hiện ở VP của các phụ thuộc hàm."
+                    "`DELETE FROM [WHERE <điều kiện>]`",
+                    "`DELETE FROM <tên bảng> [WHERE <điều kiện>]`",
+                    "`DELETE <tên bảng> [WHERE <điều kiện>]`",
+                    "Cả đáp án a và c"
                 ],
-                correct: [0],
-                explanation: "Tập trung gian (TG) là tập các thuộc tính xuất hiện ở cả hai vế của tập F."
+                correct: [1],
+                explanation: "Cú pháp chuẩn: DELETE FROM Ten_Bang WHERE ..."
             },
             {
                 id: 11,
-                text: "Chọn phát biểu đúng để tìm tập đích (TĐ)?",
+                text: "Khi thực hiện lệnh DELETE trong SQL thì số lượng dòng bị xóa phụ thuộc vào điều kiện ở mệnh đề nào?",
                 type: "single",
                 options: [
-                    "Tập TĐ chứa tất cả những thuộc tính xuất hiện ở VT của các phụ thuộc hàm.",
-                    "Tập TĐ chứa tất cả những thuộc tính xuất hiện ở VP và không xuất hiện ở VT của các phụ thuộc hàm.",
-                    "Tập TĐ chứa tất cả những thuộc tính không xuất hiện ở VP và không xuất hiện ở VT của các phụ thuộc hàm.",
-                    "Tập TĐ chứa tất cả những thuộc tính không xuất hiện ở VP và chỉ xuất hiện ở VT của các phụ thuộc hàm."
+                    "DELETE",
+                    "FROM",
+                    "WHERE",
+                    "Cả đáp án a và c"
                 ],
-                correct: [1],
-                explanation: "Tập đích (TĐ) gồm các thuộc tính chỉ xuất hiện bên vế phải, không bao giờ nằm trong khóa."
+                correct: [2],
+                explanation: "Mệnh đề WHERE xác định những dòng nào thỏa mãn để bị xóa."
             },
             {
                 id: 12,
-                text: "Hệ tiên đề Armstrong cho các phụ thuộc hàm gồm các quy tắc:",
+                text: "Khi thực hiện lệnh DELETE trong SQL nếu không chỉ định điều kiện ở mệnh đề WHERE thì...?",
                 type: "single",
                 options: [
-                    "Bắc cầu.",
-                    "Phản xạ.",
-                    "Tăng trưởng.",
-                    "Cả 3 đáp án trên."
+                    "Tất cả các bản ghi trong bảng sẽ bị xóa",
+                    "Một số bản ghi trong bảng sẽ bị xóa",
+                    "Một bản ghi trong bảng sẽ bị xóa",
+                    "Không bản ghi nào trong bảng bị xóa"
                 ],
-                correct: [3],
-                explanation: "Ba quy tắc gốc của Armstrong là: Phản xạ, Tăng trưởng và Bắc cầu."
+                correct: [0],
+                explanation: "Không có WHERE, lệnh DELETE sẽ xóa sạch dữ liệu trong bảng đó."
             },
             {
                 id: 13,
-                text: "Hệ tiên đề Armstrong có các hệ quả là:",
+                text: "Chọn cú pháp đúng cho lệnh UPDATE trong SQL?",
                 type: "single",
                 options: [
-                    "Luật hợp, luật bắc cầu, luật tách",
-                    "Luật hợp, luật tựa bắc cầu, luật tăng trưởng",
-                    "Luật hợp, luật tựa bắc cầu, luật tách",
-                    "Luật phản xạ, luật tựa bắc cầu, luật tách"
+                    "`UPDATE SET <tên thuộc tính>=<giá trị mới>, ... [WHERE <điều kiện>]`",
+                    "`UPDATE <tên bảng> <tên thuộc tính>=<giá trị mới>, ... [WHERE <điều kiện>]`",
+                    "`UPDATE <tên bảng> [WHERE <điều kiện>]`",
+                    "`UPDATE <tên bảng> SET <tên thuộc tính>=<giá trị mới>, ... [WHERE <điều kiện>]`"
                 ],
-                correct: [2],
-                explanation: "Các luật Hợp, Tách, Tựa bắc cầu được suy ra từ 3 quy tắc gốc nên gọi là hệ quả."
+                correct: [3],
+                explanation: "Cú pháp chuẩn: UPDATE Ten_Bang SET Cot = Gia_tri WHERE ..."
             },
             {
                 id: 14,
-                text: "Khẳng định nào là phụ thuộc hàm:",
+                text: "Cho CSDL: NCC(MaNCC, TenNCC, Tinhtrang, NoiSX); MH(MaMH, TenMH, Mau, Khoiluong, NoiSX); NM(MaNCC, MaMH, Soluong). Cho danh sách các mặt hàng được sản xuất tại Nam Định?",
                 type: "single",
                 options: [
-                    "Họ và tên $\\to$ Thành phố",
-                    "Họ và tên $\\to$ Địa chỉ",
-                    "Họ và tên $\\to$ Số chứng minh nhân dân",
-                    "Số chứng minh nhân dân $\\to$ Họ và tên"
+                    "$\\sigma_{NoiSX = 'Nam Định'}(MH)$",
+                    "$\\sigma_{NoiSX = 'NĐ'}(MH)$",
+                    "$\\sigma_{Nơi sản xuất = 'Nam Định'}(MH)$",
+                    "$\\delta_{(MH)} NoiSX = 'Nam Định'$"
                 ],
-                correct: [3],
-                explanation: "Số CMND là duy nhất, nên từ Số CMND có thể xác định được Họ tên. Ngược lại thì không (trùng tên)."
+                correct: [0],
+                explanation: "Phép chọn σ trên bảng MH với điều kiện NoiSX = 'Nam Định'."
             },
             {
                 id: 15,
-                text: "Trong thuật toán tìm tất cả các khóa của lược đồ quan hệ $R(U)$. Sau khi tạo tập TN và tập TG. Nếu $TG = \\emptyset$ Thì:",
+                text: "Cho biết tên các NCC đã cung cấp ít nhất 1 mặt hàng?",
                 type: "single",
                 options: [
-                    "Lược đồ quan hệ chỉ có một khóa $K = TG$",
-                    "Lược đồ quan hệ chỉ có một khóa $K = TN$",
-                    "Lược đồ quan hệ chỉ có một khóa $K = \\emptyset$",
-                    "Lược đồ quan hệ chỉ có một khóa $K = U$"
+                    "$\\Pi_{TenNCC} (NCC * NM)$",
+                    "$\\Pi_{TenNCC} (NCC \\wedge NM)$",
+                    "$\\Pi_{TenNCC} (NCC)$",
+                    "$\\Pi_{TenNCC} (NCC * MH)$"
                 ],
-                correct: [1],
-                explanation: "Nếu không có tập trung gian (TG=∅), thì khóa duy nhất chính là tập nguồn TN."
+                correct: [0],
+                explanation: "Kết NCC và NM để biết ai có đơn hàng, sau đó chiếu lấy TenNCC."
             },
             {
                 id: 16,
-                text: "Chọn phát biểu đúng cho khái niệm dạng chuẩn 1 (1NF)?",
+                text: "Cho biết tổng số các NCC đã bán được hàng?",
                 type: "single",
                 options: [
-                    "Một quan hệ được gọi là ở dạng chuẩn 1 (1NF) nếu giá trị của mỗi thuộc tính trong một bộ giá trị là một giá trị nguyên tử (đơn, không phân chia được) lấy từ miền giá trị của thuộc tính đó.",
-                    "Một quan hệ được gọi là ở dạng chuẩn 1 (1NF) nếu tồn tại thuộc tính phụ thuộc một phần vào khóa.",
-                    "Một quan hệ được gọi là ở dạng chuẩn 1 (1NF) nếu giá trị của mỗi thuộc tính trong một bộ giá trị có thể phân chia ra được.",
-                    "Một quan hệ được gọi là ở dạng chuẩn 1 (1NF) nếu tồn tại thuộc tính phụ thuộc bắc cầu vào khóa."
+                    "Count(NM, MaNCC)",
+                    "Count(MaNCC)",
+                    "Sum(NM, MaNCC)",
+                    "Count(MH, MaNCC)"
                 ],
-                correct: [0],
-                explanation: "1NF yêu cầu mọi thuộc tính đều phải có giá trị nguyên tử (atomic)."
+                correct: [1],
+                explanation: "Đếm mã nhà cung cấp trong bảng NM (nơi lưu các giao dịch)."
             },
             {
                 id: 17,
-                text: "Chọn phát biểu đúng cho khái niệm dạng chuẩn 2 (2NF)?",
+                text: "Tìm số lượng cung cấp lớn nhất của mặt hàng P1?",
                 type: "single",
                 options: [
-                    "Một quan hệ được gọi là ở dạng chuẩn 2 (2NF) nếu nó ở dạng chuẩn 1 và không tồn tại thuộc tính phụ thuộc bắc cầu vào khóa.",
-                    "Một quan hệ được gọi là ở dạng chuẩn 2 (2NF) nếu nó ở dạng chuẩn 1 và không tồn tại thuộc tính phụ thuộc một phần vào khóa.",
-                    "Một quan hệ được gọi là ở dạng chuẩn 2 (2NF) nếu giá trị của mỗi thuộc tính trong một bộ giá trị là một giá trị nguyên tử (đơn, không phân chia được) lấy từ miền giá trị của thuộc tính đó.",
-                    "Một quan hệ được gọi là ở dạng chuẩn 2 (2NF) nếu nó ở dạng chuẩn 1 và không tồn tại thuộc tính khóa phụ thuộc hàm vào thuộc tính không phải là khóa."
+                    "Max($\\sigma_{MaMH = 'P1'}(NM)$, Soluong)",
+                    "Max($\\sigma_{MaMH = 'P1'}(NM)$)",
+                    "Max($\\sigma_{MaMH = 'P1'}(Soluong)$)",
+                    "Max($\\sigma_{MaMH = 'P1'}(MH)$, Soluong)"
                 ],
-                correct: [1],
-                explanation: "2NF = 1NF + Không có phụ thuộc hàm bộ phận (mọi thuộc tính không khóa phải phụ thuộc đầy đủ vào khóa)."
+                correct: [0],
+                explanation: "Lọc mặt hàng P1 trong bảng NM, sau đó dùng hàm Max cho cột Soluong."
             },
             {
                 id: 18,
-                text: "Chọn phát biểu đúng cho khái niệm dạng chuẩn 3 (3NF)?",
+                text: "Cho thông tin về các mặt hàng màu đỏ được sản xuất ở Hà Nội?",
                 type: "single",
                 options: [
-                    "Một quan hệ được gọi là ở dạng chuẩn 3 (3NF) nếu nó ở dạng chuẩn 2 và không tồn tại thuộc tính khóa phụ thuộc hàm vào thuộc tính không phải là khóa.",
-                    "Một quan hệ được gọi là ở dạng chuẩn 3 (3NF) nếu giá trị của mỗi thuộc tính trong một bộ giá trị là một giá trị nguyên tử (đơn, không phân chia được) lấy từ miền giá trị của thuộc tính đó.",
-                    "Một quan hệ được gọi là ở dạng chuẩn 3 (3NF) nếu nó ở dạng chuẩn 2 và không tồn tại thuộc tính phụ thuộc bắc cầu vào khóa.",
-                    "Một quan hệ được gọi là ở dạng chuẩn 3 (3NF) nếu nó ở dạng chuẩn 2 và không tồn tại thuộc tính khóa phụ thuộc hàm vào thuộc tính không phải là khóa."
+                    "$\\sigma_{(Mau = 'Đỏ') \\wedge (NoiSX = 'HN')}(MH)$",
+                    "$\\sigma_{(Mau = 'Đỏ') \\vee (NoiSX = 'HN')}(MH)$",
+                    "$\\sigma_{(Mau = 'Đỏ') \\wedge (Nơi sản xuất = 'HN')}(MH)$",
+                    "$\\sigma_{(Mau = 'Đỏ') \\vee (NoiSX = 'HN')}(MH)$"
                 ],
-                correct: [2],
-                explanation: "3NF = 2NF + Không có phụ thuộc bắc cầu từ thuộc tính không khóa vào khóa."
+                correct: [0],
+                explanation: "Phép chọn với điều kiện kết hợp AND (∧) cho cả Mau và NoiSX."
             },
             {
                 id: 19,
-                text: "Chọn phát biểu đúng cho khái niệm dạng chuẩn Boyce – Codd (BCNF)?",
+                text: "Cho biết tên các mặt hàng đã được bán với số lượng lớn hơn 10?",
                 type: "single",
                 options: [
-                    "Một quan hệ được gọi là ở dạng chuẩn BCNF nếu nó ở dạng chuẩn 3 và không tồn tại thuộc tính khóa phụ thuộc hàm vào thuộc tính không phải là khóa.",
-                    "Một quan hệ được gọi là ở dạng chuẩn BCNF nếu giá trị của mỗi thuộc tính trong một bộ giá trị là một giá trị nguyên tử (đơn, không phân chia được) lấy từ miền giá trị của thuộc tính đó.",
-                    "Một quan hệ được gọi là ở dạng chuẩn BCNF nếu nó ở dạng chuẩn 3 và không tồn tại thuộc tính phụ thuộc bắc cầu vào khóa.",
-                    "Một quan hệ được gọi là ở dạng chuẩn BCNF nếu nó ở dạng chuẩn 3 và không tồn tại thuộc tính khóa phụ thuộc hàm vào thuộc tính không phải là khóa."
+                    "$\\Pi_{TenMH}(\\sigma_{soluong > 10}(MH * NM))$",
+                    "$\\Pi_{TenMH}(\\sigma_{soluong > 10}(MH \\wedge NM))$",
+                    "$\\Pi_{TenMH}(\\sigma_{soluong > 10}(NM))$",
+                    "$\\Pi_{TenMH}(\\sigma_{soluong > 10}(MH))$"
                 ],
                 correct: [0],
-                explanation: "BCNF (Dạng chuẩn mạnh hơn 3NF): Mọi vế trái của các phụ thuộc hàm đều phải là siêu khóa."
+                explanation: "Kết MH và NM, lọc Soluong > 10, sau đó chiếu lấy TenMH."
             },
             {
                 id: 20,
-                text: "Phát biểu nào sau đây đúng với Phụ thuộc hàm đầy đủ?",
+                text: "Cho danh sách các nhà cung cấp tại TP Hồ Chí Minh?",
                 type: "single",
                 options: [
-                    "Một phụ thuộc hàm $X \\to Y$ là một phụ thuộc hàm đầy đủ nếu loại bỏ bất kỳ thuộc tính $A$ nào ra khỏi $X$ thì phụ thuộc hàm luôn đúng.",
-                    "Một phụ thuộc hàm $X \\to Y$ là một phụ thuộc hàm đầy đủ nếu loại bỏ bất kỳ thuộc tính $A$ nào ra khỏi $X$ thì phụ thuộc hàm không còn đúng nữa.",
-                    "Một phụ thuộc hàm $X \\to Y$ là một phụ thuộc hàm đầy đủ nếu thêm bất kỳ thuộc tính $A$ nào ra khỏi $X$ thì phụ thuộc hàm luôn đúng.",
-                    "Một phụ thuộc hàm $X \\to Y$ là một phụ thuộc hàm đầy đủ nếu thêm bất kỳ thuộc tính $A$ nào ra khỏi $X$ thì phụ thuộc hàm không còn đúng nữa."
+                    "$\\sigma_{NoiSX = 'TPHCM'}(NCC)$",
+                    "$\\sigma_{Nơi sản xuất = 'TPHCM'}(NCC)$",
+                    "$\\sigma_{NoiSX = TPHCM}(NCC)$",
+                    "$\\sigma_{NoiSX = 'TPHCM'}(MH)$"
                 ],
-                correct: [1],
-                explanation: "Phụ thuộc đầy đủ nghĩa là không thể bỏ bất kỳ thuộc tính nào ở vế trái mà vẫn giữ được phụ thuộc hàm."
+                correct: [0],
+                explanation: "Phép chọn trên bảng NCC với điều kiện NoiSX = 'TPHCM'."
             },
             {
                 id: 21,
-                text: "Phát biểu nào sau đây đúng với Phụ thuộc hàm bộ phận?",
+                text: "Đưa ra mã những nhà cung cấp đã cung cấp mặt hàng có mã SM02 với số lượng > 2?",
                 type: "single",
                 options: [
-                    "Một phụ thuộc hàm $X \\to Y$ là phụ thuộc hàm bộ phận nếu có thể bỏ đi 1 thuộc tính $A \\in X$ ra khỏi $X$ mà phụ thuộc hàm vẫn còn đúng.",
-                    "Một phụ thuộc hàm $X \\to Y$ là một phụ thuộc hàm đầy đủ nếu loại bỏ bất kỳ thuộc tính $A$ nào ra khỏi $X$ thì phụ thuộc hàm không còn đúng nữa.",
-                    "Một phụ thuộc hàm $X \\to Y$ là một phụ thuộc hàm đầy đủ nếu thêm bất kỳ thuộc tính $A$ nào ra khỏi $X$ thì phụ thuộc hàm luôn đúng.",
-                    "Một phụ thuộc hàm $X \\to Y$ là một phụ thuộc hàm đầy đủ nếu thêm bất kỳ thuộc tính $A$ nào ra khỏi $X$ thì phụ thuộc hàm không còn đúng nữa."
+                    "`Select MaNCC from NM where MaMH='SM02' and Soluong>2`",
+                    "`Select * from NM where MaMH='SM02' and Soluong>2`",
+                    "`Select MaNCC from MH where MaMH='SM02' and Soluong>2`",
+                    "`Select MaMH from NM where MaMH=02 and Soluong>2`"
                 ],
                 correct: [0],
-                explanation: "Ngược với câu 20, nếu bỏ bớt thuộc tính vế trái mà vẫn đúng thì đó là phụ thuộc bộ phận."
+                explanation: "Truy vấn đơn giản trên bảng NM với 2 điều kiện lọc."
             },
             {
                 id: 22,
-                text: "Tìm phủ tối thiểu (Phủ không dư thừa) có mấy bước?",
+                text: "Đưa ra tên các nhà cung cấp đã cung cấp mặt hàng có mã SM02?",
                 type: "single",
                 options: [
-                    "1",
-                    "2",
-                    "3",
-                    "4"
+                    "`Select TenNCC from NCC, NM Where (NCC.MaNCC = NM.MaNCC)`",
+                    "`Select NCC.TenNCC from NCC, NM Where (NCC.MaNCC = NM.MaNCC) and (NM.MaMH='SM02')`",
+                    "`Select TenNCC from NCC, NM Where (NCC.MaNCC = MH.MaNCC)`",
+                    "`Select TenNCC from NCC, MH Where (NCC.MaNCC = MH.MaNCC) and (MH.MaMH='SM02')`"
                 ],
-                correct: [2],
-                explanation: "Thường gồm 3 bước: (1) Tách vế phải thành đơn thuộc tính, (2) Loại bỏ thuộc tính dư thừa vế trái, (3) Loại bỏ phụ thuộc hàm dư thừa."
+                correct: [1],
+                explanation: "Cần kết bảng NCC và NM (qua MaNCC) để lấy TenNCC từ mã hàng SM02."
             },
             {
                 id: 23,
-                text: "Cho quan hệ $R(A, B, C, D, E)$; Khóa là $AB$<br>Tập phụ thuộc hàm $F = \\{AB \\to CD, C \\to E\\}$<br>Quan hệ trên ở dạng chuẩn nào?",
+                text: "Đưa ra tên các mặt hàng bắt đầu bằng chữ \"S\" sản xuất tại Hà Nội?",
                 type: "single",
                 options: [
-                    "1NF",
-                    "2NF",
-                    "3NF",
-                    "BCNF"
+                    "`Select * from MH`",
+                    "`Select * from MH where TenMH='S`",
+                    "`Select TenMH from MH where TenMH like 'S%' and NoiSX='Hà Nội'`",
+                    "`Select TenMH from MH where TenMH like 'S_' and NoiSX='Hà Nội'`"
                 ],
-                correct: [1],
-                explanation: "Khóa AB. Ta có C→E. Vì C không phải là khóa nhưng C là thuộc tính không khóa xác định E, đồng thời C phụ thuộc đầy đủ vào AB nên không vi phạm 2NF, nhưng vi phạm 3NF (phụ thuộc bắc cầu AB→C→E)."
+                correct: [2],
+                explanation: "Toán tử LIKE 'S%' dùng để tìm chuỗi bắt đầu bằng chữ S."
             },
             {
                 id: 24,
-                text: "Cho $R(A, B, C, D, E, F)$; Khóa là $AB$<br>Tập phụ thuộc hàm $F = \\{AB \\to CD, AB \\to E, E \\to F\\}$<br>Quan hệ trên ở dạng chuẩn nào?",
+                text: "Cho biết tổng số các nhà cung cấp đã cung cấp mặt hàng SM02?",
                 type: "single",
                 options: [
-                    "1NF",
-                    "2NF",
-                    "3NF",
-                    "BCNF"
+                    "`Select count(*) from NM where MaMH='MS 02'`",
+                    "`Select count(*) from NM where MaMH='SM02'`",
+                    "`Select count(*) from NM where MaNCC like 'SM02'`",
+                    "`Select Sum(MaNCC) from NM where MaMH='SM02'`"
                 ],
                 correct: [1],
-                explanation: "Tương tự câu 23, có chuỗi AB→E→F (phụ thuộc bắc cầu), vi phạm 3NF nhưng đạt 2NF."
+                explanation: "Hàm COUNT(*) dùng để đếm số lượng dòng thỏa mãn điều kiện."
             },
             {
                 id: 25,
-                text: "Cho $R(A, B, C, D, E)$; Khóa là $AB$<br>Tập phụ thuộc hàm $F = \\{AB \\to CDE, D \\to B\\}$<br>Quan hệ trên ở dạng chuẩn nào?",
+                text: "Đưa ra mã những nhà cung cấp đã cung cấp mặt hàng có mã SM02 và sắp xếp theo thứ tự giảm dần của mã NCC?",
                 type: "single",
                 options: [
-                    "1NF",
-                    "2NF",
-                    "3NF",
-                    "BCNF"
+                    "`Select MaNCC from NCC where MaMH='SM02%'`",
+                    "`Select MaNCC from NM where MaMH='SM02' order by MaNCC`",
+                    "`Select MaNCC from NCC where MaMH='SM02_'`",
+                    "`Select MaNCC from NM where MaMH='SM02' order by MaNCC DESC`"
                 ],
-                correct: [2],
-                explanation: "Khóa là AB. Có phụ thuộc hàm D→B. B là thuộc tính khóa, D không phải siêu khóa. Vi phạm BCNF nhưng vẫn đạt 3NF vì vế phải (B) là thuộc tính khóa."
+                correct: [3],
+                explanation: "Sắp xếp giảm dần sử dụng từ khóa DESC (Descending)."
             }
         ];
         
