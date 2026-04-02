@@ -7,5 +7,14 @@
     "category": "Đại số tuyến tính",
     "subcategory": "Cơ bản",
     "thumbnail": "https://placehold.co/600x400/4f52ff/FFFFFF?text=Đại số tuyến tính&font=roboto"
+  },
+  {
+    "id": "tncsdl-c1",
+    "title": "Trắc nghiệm Lý thuyết cơ sở dữ liệu - Chương 1",
+    "description": "Lý thuyết cơ sở dữ liệu - Chương 1",
+    "url": "docs/csdl/tn-c1.html",
+    "category": "Cơ sở dữ liệu",
+    "subcategory": "Cơ bản",
+    "thumbnail": "https://placehold.co/600x400/15b30c/FFFFFF?text=Cơ sở dữ liệu&font=roboto"
   }
 ]
